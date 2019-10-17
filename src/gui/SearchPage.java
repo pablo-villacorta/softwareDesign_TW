@@ -7,10 +7,15 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -27,10 +32,12 @@ public class SearchPage extends JPanel {
 	
 	private static SimpleDateFormat dateFormatter;
 	private static SimpleDateFormat timeFormatter;
+	private static DecimalFormat priceFormatter;
 	
 	static {
 		dateFormatter = new SimpleDateFormat("yyyy-mm-dd");
 		timeFormatter = new SimpleDateFormat("hh:mm");
+		priceFormatter = new DecimalFormat("#");
 	}
 	
 	public SearchPage() {
@@ -121,25 +128,29 @@ public class SearchPage extends JPanel {
 
 			int rows = flight.getType() == FlightType.ROUNDTRIP ? 2 : 1;
 			mainPanel = new JPanel(new GridLayout(rows, 1));
+			mainPanel.setBorder(new EmptyBorder(0,0,0,10));
+			
+			mainPanel.add(new FlightResultInfo(flight.getDepartingAirline(),
+								flight.getDepartingTakeoffDate(), 
+								flight.getDepartingLandingDate(), 
+								flight.getOriginAirport(), 
+								flight.getDestinationAirport()));
 			
 			initComponents();
 			
+			pricePanel.add(Box.createGlue());
 			pricePanel.add(priceLabel);
 			pricePanel.add(detailsButton);
-			
-			mainPanel.add(departingAirlineLabel);
-			mainPanel.add(departingTakeoffTimeLabel);
-			mainPanel.add(departingTakeoffAirportLabel);
-			mainPanel.add(departingLandingAirportLabel);
-			mainPanel.add(departingLandingTimeLabel);
+			pricePanel.add(Box.createGlue());
 			
 			if (flight.getType() == FlightType.ROUNDTRIP) {
-				mainPanel.add(returningAirlineLabel);
-				mainPanel.add(returningTakeoffTimeLabel);
-				mainPanel.add(returningTakeoffAirportLabel);
-				mainPanel.add(returningLandingAirportLabel);
-				mainPanel.add(returningLandingTimeLabel);
-				
+				FlightResultInfo returningPanel = new FlightResultInfo(flight.getReturningAirline(),
+						flight.getReturningTakeoffDate(), 
+						flight.getReturningLandingDate(), 
+						flight.getDestinationAirport(), 
+						flight.getOriginAirport());
+				returningPanel.addSeparatorBorder();
+				mainPanel.add(returningPanel);
 			}
 			
 			this.add(mainPanel, BorderLayout.CENTER);
@@ -150,23 +161,99 @@ public class SearchPage extends JPanel {
 			detailsButton = new JButton("See details");
 			detailsButton.setAlignmentX(CENTER_ALIGNMENT);
 			
-			priceLabel = new JLabel(flight.getTotalPrice() + " $");
+			priceLabel = new JLabel(priceFormatter.format(flight.getTotalPrice()) + " $");
 			priceLabel.setAlignmentX(CENTER_ALIGNMENT);
-			
-			departingAirlineLabel = new JLabel(flight.getDepartingAirline().getName());
-			departingTakeoffAirportLabel = new JLabel(flight.getOriginAirport().getCode());
-			departingLandingAirportLabel = new JLabel(flight.getDestinationAirport().getCode());
-			departingTakeoffTimeLabel = new JLabel(timeFormatter.format(flight.getDepartingTakeoffDate()));
-			departingLandingTimeLabel = new JLabel(timeFormatter.format(flight.getDepartingLandingDate()));
-			
-			if (flight.getType() == FlightType.ROUNDTRIP) {
-				returningAirlineLabel = new JLabel(flight.getReturningAirline().getName());
-				returningTakeoffAirportLabel = new JLabel(flight.getDestinationAirport().getCode());
-				returningLandingAirportLabel = new JLabel(flight.getOriginAirport().getCode());
-				returningTakeoffTimeLabel = new JLabel(timeFormatter.format(flight.getReturningTakeoffDate()));
-				returningLandingTimeLabel = new JLabel(timeFormatter.format(flight.getReturningLandingDate()));
-			}
 		}
+	}
+	
+	private class FlightResultInfo extends JPanel {
+		
+		private JLabel takeoffTimeLabel,
+					   landingTimeLabel,
+					   takeoffAirportLabel,
+					   landingAirportLabel;
+		
+		private JLabel airlineLabel;
+		
+		private Airline airline;
+		private Date takeoffTime, landingTime;
+		private Airport takeoffAirport, landingAirport;
+
+		public FlightResultInfo(Airline airline,
+								Date takeoffTime,
+								Date landingTime,
+								Airport takeoffAirport,
+								Airport landingAirport) {
+			super();
+			this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+			this.setBorder(new EmptyBorder(0,0,10,0));
+			
+			this.airline = airline;
+			this.takeoffTime = takeoffTime;
+			this.landingTime = landingTime;
+			this.takeoffAirport = takeoffAirport;
+			this.landingAirport = landingAirport;
+			
+			JPanel journeyInfoPanel = new JPanel();
+			journeyInfoPanel.setLayout(new BoxLayout(journeyInfoPanel, BoxLayout.X_AXIS));
+			JPanel takeoffInfo, landingInfo, arrowPanel;
+			
+			takeoffInfo = new JPanel(new BorderLayout());
+			landingInfo = new JPanel(new BorderLayout());
+			arrowPanel = new JPanel(new FlowLayout());
+			takeoffInfo.setAlignmentY(CENTER_ALIGNMENT);
+			landingInfo.setAlignmentY(CENTER_ALIGNMENT);
+			arrowPanel.setAlignmentY(CENTER_ALIGNMENT);
+			
+			initComponents();
+			
+			takeoffInfo.add(takeoffTimeLabel, BorderLayout.NORTH);
+			takeoffInfo.add(takeoffAirportLabel, BorderLayout.SOUTH);
+			landingInfo.add(landingTimeLabel, BorderLayout.NORTH);
+			landingInfo.add(landingAirportLabel, BorderLayout.SOUTH);
+			
+			JLabel arrowLabel = new JLabel();
+			//ImageIcon arrowIcon = new ImageIcon("res/arrow.png");
+			arrowLabel.setIcon(createArrowIcon(arrowLabel));
+			arrowPanel.add(arrowLabel);
+			
+			journeyInfoPanel.add(takeoffInfo);
+			journeyInfoPanel.add(arrowPanel);
+			journeyInfoPanel.add(landingInfo);
+			journeyInfoPanel.setAlignmentY(CENTER_ALIGNMENT);
+			
+			this.add(airlineLabel);
+			this.add(Box.createGlue());
+			this.add(journeyInfoPanel);
+		}
+		
+		private ImageIcon createArrowIcon(JLabel arrowLabel) {
+			BufferedImage img = null;
+			try {
+				img = ImageIO.read(new File("res/arrow.png"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			Image dimg = img.getScaledInstance(60, 20, Image.SCALE_SMOOTH);
+			return new ImageIcon(dimg);
+		}
+		
+		public void addSeparatorBorder() {
+			Border margin = new EmptyBorder(10,0,0,0);
+			Border sep = BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY);
+			this.setBorder(new CompoundBorder(sep, margin));
+		}
+		
+		private void initComponents() {
+			airlineLabel = new JLabel(airline.getName());
+			airlineLabel.setAlignmentY(CENTER_ALIGNMENT);
+			takeoffAirportLabel = new JLabel(takeoffAirport.getCode(), SwingConstants.CENTER);
+			landingAirportLabel = new JLabel(landingAirport.getCode(), SwingConstants.CENTER);
+			takeoffTimeLabel = new JLabel(timeFormatter.format(takeoffTime), SwingConstants.CENTER);
+			landingTimeLabel = new JLabel(timeFormatter.format(landingTime), SwingConstants.CENTER);
+		}
+		
 	}
 	
 	private class SearchMenu extends JPanel {
@@ -316,7 +403,7 @@ public class SearchPage extends JPanel {
 		public TopMenu() {
 			super();
 			this.setBorder(new EmptyBorder(10, 10, 10, 10));
-			//this.setBackground(Color.pink);
+			//this.jasetBackground(Color.pink);
 			this.setLayout(new BorderLayout());
 			
 			JPanel buttons = new JPanel(new GridLayout(1, 2));
@@ -326,7 +413,7 @@ public class SearchPage extends JPanel {
 			buttons.add(loginButton);
 			buttons.add(registerButton);
 			this.add(buttons, BorderLayout.EAST);
-			this.add(new JButton("Back"), BorderLayout.WEST);
+			//this.add(new JButton("Back"), BorderLayout.WEST);
 		}
 		
 	}
