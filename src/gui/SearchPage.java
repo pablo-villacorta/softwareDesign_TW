@@ -2,12 +2,13 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.DecimalFormat;
@@ -414,6 +415,22 @@ public class SearchPage extends JPanel {
 			buttons.add(registerButton);
 			this.add(buttons, BorderLayout.EAST);
 			//this.add(new JButton("Back"), BorderLayout.WEST);
+			
+			addListeners();
+		}
+		
+		private void addListeners() {
+			loginButton.addActionListener(new ActionListener() {
+			  public void actionPerformed(ActionEvent e) {
+				Window.window.setPage(Window.window.loginPage);
+			  }
+			});
+			
+			registerButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Window.window.setPage(Window.window.registerPage);
+				}
+			});
 		}
 		
 	}

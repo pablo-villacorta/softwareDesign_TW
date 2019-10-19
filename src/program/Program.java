@@ -10,8 +10,8 @@ import gui.Window;
 public class Program {
 
 	public static void main(String[] args) {
-		Window w = new Window();
-		showOnScreen(1, w);
+		Window.window = new Window();
+		showOnScreen(1, Window.window);
 	}
 	
 	// double screen related stuff

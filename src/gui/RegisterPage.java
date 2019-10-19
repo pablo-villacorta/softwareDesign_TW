@@ -8,10 +8,10 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-public class LoginPage extends JPanel {
+public class RegisterPage extends JPanel {
 
-	private JLabel usernameLabel, passwordLabel;
-	private JTextField usernameField;
+	private JLabel usernameLabel, passwordLabel, fullNameLabel;
+	private JTextField usernameField, fullNameField;
 	private JPasswordField passwordField;
 	
 	private JRadioButton googleRadioBtn,
@@ -22,7 +22,7 @@ public class LoginPage extends JPanel {
 	
 	private JButton backButton;
 	
-	public LoginPage() {
+	public RegisterPage() {
 		super();
 		this.setLayout(new BorderLayout());
 		
@@ -36,40 +36,46 @@ public class LoginPage extends JPanel {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
 		JPanel loginOptionsPanel = new JPanel(new BorderLayout());
-		loginOptionsPanel.add(new JLabel("Log in using: "), BorderLayout.NORTH);
+		loginOptionsPanel.add(new JLabel("Register using: "), BorderLayout.NORTH);
 		JPanel radioButtonsPanel = new JPanel(new FlowLayout());
 		radioButtonsPanel.add(googleRadioBtn);
 		radioButtonsPanel.add(facebookRadioBtn);
 		radioButtonsPanel.add(twitterRadioBtn);
 		loginOptionsPanel.add(radioButtonsPanel, BorderLayout.CENTER);
 		
-		JPanel credentialsPanel = new JPanel(new GridLayout(2, 1));
+		JPanel credentialsPanel = new JPanel(new GridLayout(3, 1));
 		JPanel usernameInputPanel = new JPanel();
 		JPanel passwordInputPanel = new JPanel();
+		JPanel fullNameInputPanel = new JPanel();
 		usernameInputPanel.setLayout(new BoxLayout(usernameInputPanel, BoxLayout.X_AXIS));
 		passwordInputPanel.setLayout(new BoxLayout(passwordInputPanel, BoxLayout.X_AXIS));
+		fullNameInputPanel.setLayout(new BoxLayout(fullNameInputPanel, BoxLayout.X_AXIS));
+		fullNameInputPanel.add(fullNameLabel);
+		fullNameInputPanel.add(fullNameField);
 		usernameInputPanel.add(usernameLabel);
 		usernameInputPanel.add(usernameField);
 		passwordInputPanel.add(passwordLabel);
 		passwordInputPanel.add(passwordField);
+		fullNameInputPanel.setBorder(new EmptyBorder(10,0,10,0));
 		usernameInputPanel.setBorder(new EmptyBorder(10,0,10,0));
 		passwordInputPanel.setBorder(new EmptyBorder(10,0,10,0));
+		credentialsPanel.add(fullNameInputPanel);
 		credentialsPanel.add(usernameInputPanel);
 		credentialsPanel.add(passwordInputPanel);
 		mainPanel.add(credentialsPanel, BorderLayout.CENTER);
 		
 		JPanel loginRegisterOptionsPanel = new JPanel(new GridLayout(2, 1));
-		JPanel loginButtonPanel = new JPanel(new BorderLayout());
-		loginButtonPanel.add(loginButton, BorderLayout.EAST);
-		loginButtonPanel.setBorder(new EmptyBorder(10,0,0,0));
-		
 		JPanel registerButtonPanel = new JPanel(new BorderLayout());
-		registerButtonPanel.add(new JLabel("You don't have an account? "), BorderLayout.CENTER);
 		registerButtonPanel.add(registerButton, BorderLayout.EAST);
 		registerButtonPanel.setBorder(new EmptyBorder(10,0,0,0));
 		
-		loginRegisterOptionsPanel.add(loginButtonPanel);
+		JPanel loginButtonPanel = new JPanel(new BorderLayout());
+		loginButtonPanel.add(new JLabel("Already have an account? "), BorderLayout.CENTER);
+		loginButtonPanel.add(loginButton, BorderLayout.EAST);
+		loginButtonPanel.setBorder(new EmptyBorder(10,0,0,0));
+		
 		loginRegisterOptionsPanel.add(registerButtonPanel);
+		loginRegisterOptionsPanel.add(loginButtonPanel);
 		mainPanel.add(loginRegisterOptionsPanel, BorderLayout.SOUTH);
 			
 		mainPanel.add(loginOptionsPanel, BorderLayout.NORTH);
@@ -81,8 +87,10 @@ public class LoginPage extends JPanel {
 	}
 	
 	private void initComponents() {
+		this.fullNameLabel = new JLabel("Full Name: ");
 		this.usernameLabel = new JLabel("Username: "); //email?
 		this.passwordLabel = new JLabel("Password: ");
+		this.fullNameField = new JTextField();
 		this.usernameField = new JTextField();
 		this.passwordField = new JPasswordField();
 		
@@ -96,7 +104,7 @@ public class LoginPage extends JPanel {
 		googleRadioBtn.setSelected(true);
 		
 		this.loginButton = new JButton("Log in");
-		this.registerButton = new JButton("Register");
+		this.registerButton = new JButton("Sign up");
 		this.backButton = new JButton("Back");
 	}
 	
@@ -107,15 +115,15 @@ public class LoginPage extends JPanel {
 			}
 		});
 		
-		this.loginButton.addActionListener(new ActionListener() {
+		this.registerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Window.window.setPage(Window.window.searchPage);
 			}
 		});
 		
-		this.registerButton.addActionListener(new ActionListener() {
+		this.loginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Window.window.setPage(Window.window.registerPage);
+				Window.window.setPage(Window.window.loginPage);
 			}
 		});
 	}
