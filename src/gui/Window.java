@@ -17,8 +17,8 @@ public class Window extends JFrame {
 		super("EasyBooking");
 		
 		this.cp = this.getContentPane();
-		cp.add(new SearchPage());
-		//cp.add(new LoginPage());
+		//cp.add(new SearchPage());
+		cp.add(new LoginPage());
 		//this.setLookAndFeel();
 		
 	    this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
