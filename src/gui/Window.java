@@ -27,7 +27,7 @@ public class Window extends JFrame {
 		this.cp = this.getContentPane();
 		//cp.add(searchPage);
 		
-		cp.add(new RegisterPage()); // todo delete
+		cp.add(new HistoryPage()); // todo delete
 		
 	    this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		this.setVisible(true);
