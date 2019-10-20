@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URL;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
@@ -69,9 +70,9 @@ public class FlightResultInfo extends JPanel {
 			landingInfo.add(landingTimeLabel, BorderLayout.NORTH);
 			landingInfo.add(landingAirportLabel, BorderLayout.SOUTH);
 			
-			JLabel arrowLabel = new JLabel();
+			JLabel arrowLabel = new JLabel("--------- >");
 			//ImageIcon arrowIcon = new ImageIcon("res/arrow.png");
-			arrowLabel.setIcon(createArrowIcon(arrowLabel));
+			//arrowLabel.setIcon(createArrowIcon(arrowLabel));
 			arrowPanel.add(arrowLabel);
 			
 			journeyInfoPanel.add(takeoffInfo);
@@ -84,17 +85,21 @@ public class FlightResultInfo extends JPanel {
 			this.add(journeyInfoPanel);
 		}
 		
-		private ImageIcon createArrowIcon(JLabel arrowLabel) {
+		/*private ImageIcon createArrowIcon(JLabel arrowLabel) {
 			BufferedImage img = null;
 			try {
-				img = ImageIO.read(new File("res/arrow.png"));
+				//img = ImageIO.read(new File("/arrow.png"));
+				URL url = Window.class.getResource("arrow.png");
+				System.out.println(url);
+				System.out.println(url.getFile());
+				img = ImageIO.read(new File(url.getFile()));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
 			Image dimg = img.getScaledInstance(60, 20, Image.SCALE_SMOOTH);
 			return new ImageIcon(dimg);
-		}
+		}*/
 		
 		public void addSeparatorBorder() {
 			Border margin = new EmptyBorder(10,0,0,0);

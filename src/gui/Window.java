@@ -35,7 +35,7 @@ public class Window extends JFrame {
 		//example user
 		user = new User("John Doe", "john@doe.com", AuthorizationService.GOOGLE);
 		for (int i = 0; i < 10; i++) {
-			CreditCardPaymentMethod p = new CreditCardPaymentMethod("method "+i, "xxx-xxx-xx-x", 333, 2, 22, "VISA");
+			CreditCardPaymentMethod p = new CreditCardPaymentMethod("method "+i, "xxxx xxxx xxxx xxxx", 333, 2, 22, "VISA");
 			user.getPaymentMethods().add(p);
 		}
 		for (int i = 0; i < 3; i++) {
