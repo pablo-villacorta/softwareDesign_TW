@@ -69,7 +69,11 @@ public class SearchPage extends JPanel {
 				flight.setType(FlightType.ROUNDTRIP);
 				flight.setTotalPrice(10*(i+1));
 				flight.setOriginAirport(new Airport("BIO"));
+				flight.getOriginAirport().setCity("Bilbao");
+				flight.getOriginAirport().setName("Loiu");
 				flight.setDestinationAirport(new Airport("CDG"));
+				flight.getDestinationAirport().setCity("Paris");
+				flight.getDestinationAirport().setName("Charles de Gaulle");
 				flight.setDepartingAirline(new Airline("AirFrance"));
 				flight.setReturningAirline(new Airline("AirFrance"));
 				Date d = new Date();

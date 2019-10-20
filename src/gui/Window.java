@@ -24,7 +24,7 @@ public class Window extends JFrame {
 	public HistoryPage historyPage;
 	public ProfilePage profilePage;
 	
-	private User user;
+	public User user;
 	
 	public static Window window;
 	

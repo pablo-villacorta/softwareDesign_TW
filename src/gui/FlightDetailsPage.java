@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 
 import data.Flight;
 import data.FlightType;
+import data.PaymentMethod;
 
 public class FlightDetailsPage extends JPanel {
 
@@ -26,6 +28,9 @@ public class FlightDetailsPage extends JPanel {
 	
 	private JButton bookNewSeatButton;
 	
+	private JPanel paymentPanel;
+	private JButton bookButton;
+	private JComboBox<PaymentMethod> paymentMethodsCombo;
 	// TODO add book & pay button, combobox with payment methods + confirmation message
 	
 	public FlightDetailsPage(Flight flight) {
@@ -78,11 +83,13 @@ public class FlightDetailsPage extends JPanel {
 	}
 	
 	private void initLeftPanel() {
-		leftPanel = new JPanel();
+		leftPanel = new JPanel(new BorderLayout());
 		JPanel leftPanelContainer = new JPanel(new BorderLayout());
 		
 		JLabel titleLabel = new JLabel("Flight details: ");
 		titleLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+		titleLabel.setBorder(new EmptyBorder(10,10,10,10));
+
 		
 		JPanel infoPanel = new JPanel();
 		infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
@@ -90,7 +97,7 @@ public class FlightDetailsPage extends JPanel {
 		JLabel departingTitleLabel;
 		JPanel departingInfoPanel;
 		departingTitleLabel = new JLabel("Departing info");
-		departingInfoPanel = new JPanel(new GridLayout(8, 2));
+		departingInfoPanel = new JPanel(new GridLayout(9, 2));
 		
 		fillWithDepartingDetails(departingInfoPanel);
 		
@@ -98,13 +105,14 @@ public class FlightDetailsPage extends JPanel {
 		departingPanel.add(departingInfoPanel, BorderLayout.CENTER);
 
 		infoPanel.add(departingPanel);
+		infoPanel.setBorder(new EmptyBorder(10,10,10,10));
 		departingInfoPanel.setBorder(new EmptyBorder(10,10,10,10));
 		if (flight.getType() == FlightType.ROUNDTRIP) {
 			JPanel returningPanel = new JPanel(new BorderLayout());
 			JLabel returningTitleLabel;
 			JPanel returningInfoPanel;
 			returningTitleLabel = new JLabel("Returning info");
-			returningInfoPanel = new JPanel(new GridLayout(8, 2));
+			returningInfoPanel = new JPanel(new GridLayout(9, 2));
 			
 			fillWithReturningDetails(returningInfoPanel);
 			
@@ -115,13 +123,31 @@ public class FlightDetailsPage extends JPanel {
 		}
 		
 		JPanel bookingButtonPanel = new JPanel(new BorderLayout());
-		bookingButtonPanel.add(bookNewSeatButton, BorderLayout.EAST);
+		bookingButtonPanel.add(bookNewSeatButton, BorderLayout.WEST);
+		bookingButtonPanel.setBorder(new EmptyBorder(10,10,10,10));
 		
 		leftPanelContainer.add(titleLabel, BorderLayout.NORTH);
 		leftPanelContainer.add(infoPanel, BorderLayout.CENTER);
 		leftPanelContainer.add(bookingButtonPanel, BorderLayout.SOUTH);
 		
-		leftPanel.add(leftPanelContainer);
+		fillPaymentPanel();
+		
+		leftPanel.add(leftPanelContainer, BorderLayout.NORTH);
+		leftPanel.add(paymentPanel, BorderLayout.SOUTH);
+	}
+	
+	private void fillPaymentPanel() {
+		paymentPanel = new JPanel(new BorderLayout());
+		paymentPanel.setLayout(new FlowLayout());
+		
+		JPanel mainPanel = new JPanel();
+		
+		mainPanel.add(new JLabel("Pick a payment method: "));
+		mainPanel.add(paymentMethodsCombo);
+		mainPanel.add(bookButton);
+		
+		paymentPanel.add(new JLabel("Total price: 200 $"), BorderLayout.NORTH);
+		paymentPanel.add(mainPanel, BorderLayout.CENTER);
 	}
 	
 	private void fillWithReturningDetails(JPanel panel) {
@@ -135,6 +161,8 @@ public class FlightDetailsPage extends JPanel {
 		panel.add(new JLabel(flight.getOriginAirport().getCity()));
 		panel.add(new JLabel("Destination airport: "));
 		panel.add(new JLabel(flight.getOriginAirport().getName()+" ("+flight.getOriginAirport().getCode()+")"));
+		panel.add(new JLabel("Takeoff date: "));
+		panel.add(new JLabel(SearchPage.dateFormatter.format(flight.getReturningTakeoffDate())));
 		panel.add(new JLabel("Takeoff time: "));
 		panel.add(new JLabel(SearchPage.timeFormatter.format(flight.getReturningTakeoffDate())));
 		panel.add(new JLabel("Landing time: "));
@@ -154,6 +182,8 @@ public class FlightDetailsPage extends JPanel {
 		panel.add(new JLabel(flight.getDestinationAirport().getCity()));
 		panel.add(new JLabel("Destination airport: "));
 		panel.add(new JLabel(flight.getDestinationAirport().getName()+" ("+flight.getDestinationAirport().getCode()+")"));
+		panel.add(new JLabel("Takeoff date: "));
+		panel.add(new JLabel(SearchPage.dateFormatter.format(flight.getDepartingTakeoffDate())));
 		panel.add(new JLabel("Takeoff time: "));
 		panel.add(new JLabel(SearchPage.timeFormatter.format(flight.getDepartingTakeoffDate())));
 		panel.add(new JLabel("Landing time: "));
@@ -165,6 +195,12 @@ public class FlightDetailsPage extends JPanel {
 	private void initComponents() {
 		backButton = new JButton("Back");
 		bookNewSeatButton = new JButton("Add a seat");
+		
+		bookButton = new JButton("Book and pay");
+		paymentMethodsCombo = new JComboBox<>();
+		for (PaymentMethod m: Window.window.user.getPaymentMethods()) {
+			paymentMethodsCombo.addItem(m);
+		}
 	}
 	
 	private void addListeners() {
@@ -172,6 +208,12 @@ public class FlightDetailsPage extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				seatsPanel.add(new FullSeatPickerPanel());
 				seatsPanel.revalidate();
+			}
+		});
+		
+		bookButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Your booking has been confirmed.", "Booking confirmed", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 	}
