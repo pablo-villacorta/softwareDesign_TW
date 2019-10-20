@@ -138,6 +138,7 @@ public class SearchPage extends JPanel {
 								flight.getDestinationAirport()));
 			
 			initComponents();
+			addListeners();
 			
 			pricePanel.add(Box.createGlue());
 			pricePanel.add(priceLabel);
@@ -164,6 +165,14 @@ public class SearchPage extends JPanel {
 			
 			priceLabel = new JLabel(priceFormatter.format(flight.getTotalPrice()) + " $");
 			priceLabel.setAlignmentX(CENTER_ALIGNMENT);
+		}
+		
+		private void addListeners() {
+			detailsButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Window.window.setPage(new FlightDetailsPage(flight));
+				}
+			});
 		}
 	}
 	
