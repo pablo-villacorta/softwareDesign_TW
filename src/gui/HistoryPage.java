@@ -3,6 +3,8 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,10 +20,32 @@ import data.FlightType;
 
 public class HistoryPage extends JPanel {
 
+	private JButton backButton;
+	
 	public HistoryPage() {
 		super();
 		this.setLayout(new BorderLayout());
-		this.add(new SearchResultPage(), BorderLayout.CENTER);
+		JPanel topPanel = new JPanel(new BorderLayout());
+		
+		initComponents();
+		
+		topPanel.add(backButton, BorderLayout.WEST);
+		topPanel.setBorder(new EmptyBorder(10,10,10,10));
+		
+		JPanel mainPanel = new SearchResultPage();
+		mainPanel.setBorder(new EmptyBorder(10,10,10,10));
+		
+		this.add(topPanel, BorderLayout.NORTH);
+		this.add(mainPanel, BorderLayout.CENTER);
+	}
+	
+	private void initComponents() {
+		backButton = new JButton("Back");
+		backButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Window.window.setPage(Window.window.profilePage);
+			}
+		});
 	}
 
 	private class SearchResultPage extends JPanel {
@@ -67,25 +91,8 @@ public class HistoryPage extends JPanel {
 
 	private class FlightResult extends JPanel {
 
-		private Flight flight;
-
-		private JLabel bookingDate;
-
-		private JLabel departingTakeoffTimeLabel,
-		departingLandingTimeLabel,
-		departingTakeoffAirportLabel,
-		departingLandingAirportLabel;
-		private JLabel returningTakeoffTimeLabel,
-		returningLandingTimeLabel,
-		returningTakeoffAirportLabel,
-		returningLandingAirportLabel;
-
-		private JLabel departingAirlineLabel,
-		returningAirlineLabel;
-
 		public FlightResult(Flight flight) {
 			super();
-			this.flight = flight;
 
 			Border padding = new EmptyBorder(10,10,10,10);
 			Border border = BorderFactory.createLineBorder(Color.GRAY);

@@ -311,7 +311,7 @@ public class SearchPage extends JPanel {
 	
 	private class TopMenu extends JPanel {
 		
-		public JButton loginButton, registerButton;
+		public JButton loginButton, registerButton, profileButton;
 		
 		public TopMenu() {
 			super();
@@ -322,11 +322,12 @@ public class SearchPage extends JPanel {
 			JPanel buttons = new JPanel(new GridLayout(1, 2));
 			loginButton = new JButton("Log in");
 			registerButton = new JButton("Register");
+			profileButton = new JButton("My profile");
 
 			buttons.add(loginButton);
 			buttons.add(registerButton);
+			buttons.add(profileButton);
 			this.add(buttons, BorderLayout.EAST);
-			//this.add(new JButton("Back"), BorderLayout.WEST);
 			
 			addListeners();
 		}
@@ -341,6 +342,12 @@ public class SearchPage extends JPanel {
 			registerButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Window.window.setPage(Window.window.registerPage);
+				}
+			});
+			
+			profileButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Window.window.setPage(Window.window.profilePage);
 				}
 			});
 		}
