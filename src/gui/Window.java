@@ -30,6 +30,7 @@ public class Window extends JFrame {
 	
 	public Window() {
 		super("EasyBooking");
+		setLookAndFeel();
 		
 		//example user
 		user = new User("John Doe", "john@doe.com", AuthorizationService.GOOGLE);
@@ -46,9 +47,6 @@ public class Window extends JFrame {
 		
 		this.cp = this.getContentPane();
 		cp.add(searchPage);
-		
-		
-		//cp.add(new ProfilePage(u)); // todo delete
 		
 	    this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		this.setVisible(true);
@@ -68,7 +66,6 @@ public class Window extends JFrame {
 		profilePage = new ProfilePage(user);
 	}
 	
-	// I don't know why but this does not work
 	private void setLookAndFeel() {
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -77,6 +74,8 @@ public class Window extends JFrame {
 					break;
 				}
 			}
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}	
 }
